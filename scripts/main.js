@@ -1,26 +1,23 @@
 const main = document.querySelector('main');
 const CARDS_PER_PAGE = 8;
 
-const getBreweries =  (callback, endpoint) => {
-  const request = new XMLHttpRequest();
-  request.addEventListener('readystatechange', () => {
-    if (request.readyState === 4 && request.status === 200) {
-      let response = JSON.parse(request.responseText);
-      callback(undefined, response);
-      console.log(request.responseText);
-    } else if (request.readyState === 4) {
-      callback('Could not fetch the data', undefined);
-    }
+const getBreweries =  (endpoint) => {
+  return new Promise((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.addEventListener('readystatechange', () => {
+      if (request.readyState === 4 && request.status === 200) {
+        let response = JSON.parse(request.responseText);
+        resolve(response);
+      } else if (request.readyState === 4) {
+        reject('Could not fetch the data');
+      }
+    });
+    request.open('GET', endpoint, true);
+    request.send();
   });
-  request.open('GET', endpoint, true);
-  request.send();
 }
 
-getBreweries((err, data) => {
-  if (err) {
-    console.log("Could not fetch data");
-    return;
-  }
+getBreweries('https://api.openbrewerydb.org/v1/breweries').then((data) => {
   for (let i = 0; i < CARDS_PER_PAGE; i++) {
     let element = data[i];
     const breweryCard = 
@@ -42,4 +39,6 @@ getBreweries((err, data) => {
     </div>`
     main.insertAdjacentHTML('beforeend', breweryCard);
   };
-}, 'https://api.openbrewerydb.org/v1/breweries');
+}, (err) => {
+  console.log(err);
+});
