@@ -1,10 +1,17 @@
-const main = document.querySelector('main');
-const CARDS_PER_PAGE = 8;
+const main = document.querySelector('#cards-area');
+const CARDS_PER_PAGE = 12;
+
+main.addEventListener('click', (e) => {
+  if (e.target.className.includes("btn-details")) {
+    console.log(e.target);
+    main.remove();
+  }
+});
 
 const getBreweries = async () => {
   const response = await fetch('https://api.openbrewerydb.org/v1/breweries');
   if (response.status !== 200) {
-    throw new Error(response.status);
+    throw new Error(`Cannot fetch data. ${response.status}`);
   }
   const data = await response.json();
   return data;
@@ -13,26 +20,17 @@ getBreweries()
 .then(data => {
   for (let i = 0; i < CARDS_PER_PAGE; i++) {
     let element = data[i];
-    const breweryCard = 
+    const breweryCard =
     `<div class="card" style="width: 18rem;">
-      <img src="..." class="card-img-top" alt="...">
       <div class="card-body">
         <h5 class="card-title">${element.name}</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <p class="card-text">${element.city}, ${element.state_province}</p>
+        <a href="#" class="btn btn-primary btn-details">Details</a>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">${element.address_1}</li>
-        <li class="list-group-item">${element.city}, ${element.state_province}</li>
-        <li class="list-group-item">${element.phone}</li>
-      </ul>
-      <div class="card-body">
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
-      </div>
-    </div>`
+    </div>`;
     main.insertAdjacentHTML('beforeend', breweryCard);
   }
 })
 .catch(err => {
-  console.log('Error when attempting to fetch breweries.', err)
+  console.log('Rejected:', err.message)
 });
