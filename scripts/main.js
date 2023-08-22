@@ -38,7 +38,7 @@ getBreweries('https://api.openbrewerydb.org/v1/breweries').then((data) => {
       </div>
     </div>`
     main.insertAdjacentHTML('beforeend', breweryCard);
-  };
-}, (err) => {
+  }
+}).catch((err) => {
   console.log(err);
 });
