@@ -1,4 +1,4 @@
-const main = document.querySelector('#cards-area');
+const cards_div = document.querySelector('#cards-area');
 const CARDS_PER_PAGE = 12;
 const popupWrapper = document.querySelector('.popup-wrapper');
 const popup = document.querySelector('.popup');
@@ -9,8 +9,9 @@ const detailsCityState = document.querySelector('.details-city-state');
 const detailsPhone = document.querySelector('.details-phone');
 const detailsURL = document.querySelector('.details-url');
 const pagination = document.querySelector("#pagination");
-let currentPage = 1;
 
+let totalPages;
+let currentPage = 1;
 let breweries_arr = [];
 
 popupWrapper.addEventListener('click', (e) => {
@@ -19,7 +20,7 @@ popupWrapper.addEventListener('click', (e) => {
     popupWrapper.style.display = "none";
 });
 
-main.addEventListener('click', (e) => {
+cards_div.addEventListener('click', (e) => {
   if (e.target.className.includes("btn-details")) {
     let breweryId = e.target.parentElement.parentElement.querySelector('.brewery-id').innerText;
     getBreweryDetails(breweryId)
@@ -67,11 +68,12 @@ const buildBreweryCard = (brewery) => {
       <a href="#" class="btn btn-primary btn-details">Details</a>
     </div>
   </div>`;
-  main.insertAdjacentHTML('afterbegin', breweryCard);
+  cards_div.insertAdjacentHTML('afterbegin', breweryCard);
 }
 
 const loadBreweries = () => {
 
+  cards_div.textContent = '';
   const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
   const endIndex = currentPage * CARDS_PER_PAGE;
   for (let i = startIndex; i < endIndex && i < breweries_arr.length; i++) {
@@ -81,10 +83,38 @@ const loadBreweries = () => {
 
 }
 
+function updatePagination () {
+  pagination.innerHTML = '';
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageItem = document.createElement('li');
+    pageItem.classList.add('page-item');
+
+    const pageLink = document.createElement('a');
+    pageLink.classList.add('page-link');
+    pageLink.textContent = i;
+
+    if (i === currentPage) {
+      pageItem.classList.add("active");
+    }
+
+    pageLink.addEventListener('click', () => {
+      currentPage = i;
+      loadBreweries();
+      updatePagination();
+    });
+
+    pageItem.append(pageLink);
+    pagination.append(pageItem);
+  }
+}
+
 getBreweries()
 .then(data => {
   breweries_arr = [...data];
+  totalPages = Math.ceil(data.length / CARDS_PER_PAGE);
   loadBreweries();
+  updatePagination();
 })
 .catch(err => {
   console.log('Rejected:', err.message);
