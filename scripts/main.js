@@ -7,6 +7,41 @@ const detailsStreetAddress = document.querySelector('.details-streetAddress');
 const detailsCityState = document.querySelector('.details-city-state');
 const detailsPhone = document.querySelector('.details-phone');
 const detailsURL = document.querySelector('.details-url');
+const pagination = document.querySelector("#pagination");
+let totalPages;
+totalPages = Math.ceil(49 / CARDS_PER_PAGE);
+
+updatePagination(1);
+
+function displayTasks (page) {
+  const startIndex = (page - 1) * CARDS_PER_PAGE;
+  const endIndex = startIndex + CARDS_PER_PAGE;
+
+  for (let i = startIndex; i < endIndex && i < tasks.length; i++) {
+    addTask(tasks[i].title, tasks[i].completed);
+  }
+}
+
+function updatePagination(currentPage) {
+  pagination.innerHTML = '';
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageItem = `<li class='page-item'></li>`;
+    const pageLink = $(`<a class='page-link' href='#'>${i}</a>`)
+
+    if (i === currentPage) {
+      pageItem.addClass("active");
+    }
+
+    pageLink.click(() => {
+      displayTasks(i);
+      updatePagination(i);
+    });
+
+    pageItem.append(pageLink);
+    pagination.append(pageItem);
+  }
+}
 
 popupWrapper.addEventListener('click', () => {
   popupWrapper.style.display = "none";
@@ -40,7 +75,7 @@ const getBreweries = async () => {
   const data = await response.json();
   return data;
 };
-// const breweryId = '5128df48-79fc-4f0f-8b52-d06be54d0cec';
+
 const getBreweryDetails = async (breweryId) => {
   const response = await fetch(`https://api.openbrewerydb.org/v1/breweries/${breweryId}`);
   if (!response.ok) {
@@ -63,7 +98,8 @@ getBreweries()
         <a href="#" class="btn btn-primary btn-details">Details</a>
       </div>
     </div>`;
-    main.insertAdjacentHTML('beforeend', breweryCard);
+    main.insertAdjacentHTML('afterbegin', breweryCard);
+
   }
 })
 .catch(err => {
