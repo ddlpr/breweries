@@ -1,6 +1,18 @@
+/* === <CONSTANTS> === */
 const API_BASE_DOMAIN = 'https://api.openbrewerydb.org/v1/breweries';
-const cards_div = document.querySelector('#cards-area');
 const CARDS_PER_PAGE = 12;
+/* === </CONSTANTS> === */
+//#region GLOBAL VARIABLES
+let typeValue;
+let filtered_breweries = [];
+let totalPages;
+let currentPage = 1;
+let breweries_arr = [];
+let states, cities, types;
+//#endregion
+
+//#region DOM NODES
+const cards_div = document.querySelector('#cards-area');
 const popupWrapper = document.querySelector('.popup-wrapper');
 const popup = document.querySelector('.popup');
 const detailsCard = document.querySelector('.details-card');
@@ -12,56 +24,70 @@ const detailsType = document.querySelector('.details-type');
 const detailsURL = document.querySelector('.details-url');
 const pagination = document.querySelector("#pagination");
 const filter_type = document.querySelector('select[data-filter-type');
+const filter_state = document.querySelector('select[data-filter-state');
+const filter_city = document.querySelector('select[data-filter-city]');
 const filters_section = document.querySelector('.filters');
-let typeValue;
 const dropdownMenu = document.querySelector(".dropDown__menu");
-let filtered_breweries = [];
-let totalPages;
-let currentPage = 1;
-let breweries_arr = [];
+//#endregion DOM NODES
 
+const loadValues = (select, values) => {
+  // values.forEach(value => {
+  for (let i = 0; i < values.length; i++) {
+    const option =
+      `<option value="${values[i]}" class="filter__option">${values[i]}</option>`;
 
-filter_type.addEventListener('change', () => {
-  
-  const selectedOption = filter_type.selectedOptions[0];
-  const selectedValue = selectedOption.value;
-  if (selectedValue !== '') {
-    filtered_breweries = breweries_arr.filter(brewery => brewery.brewery_type === selectedValue);
-    cards_div.innerText = '';
-    totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
-    console.log(filtered_breweries);
-    loadBreweries(filtered_breweries);
-    updatePagination(filtered_breweries);
-  } else {
-    getBreweries()
-      .then(data => {
-        breweries_arr = [...data];
-        totalPages = Math.ceil(data.length / CARDS_PER_PAGE);
-        loadBreweries(breweries_arr);
-        updatePagination(breweries_arr);
-      })
-      .catch(err => {
-        console.log('Rejected:', err.message);
-      });
-  }
+    select.insertAdjacentHTML('beforeend', option);
+  };
+};
+
+const filter_dropdowns = document.querySelectorAll('.filter');
+filter_dropdowns.forEach(filter => {
+
+  filter.addEventListener('change', (e) => {
+
+    const selectedIndex = filter.selectedIndex;
+    const selectedValue = filter[selectedIndex].value;
+    console.log(e);
+    if (selectedValue !== '') {
+      if (e.target.matches('[data-filter-type]')) {
+        filtered_breweries = breweries_arr.filter(brewery => brewery.brewery_type === selectedValue);
+        cards_div.innerText = '';
+        totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
+        console.log(filtered_breweries);
+        loadBreweries(filtered_breweries);
+        updatePagination(filtered_breweries);
+      } else if (e.target.matches('[data-filter-state]')) {
+        filter_city.disabled = false;
+        filtered_breweries = breweries_arr.filter(brewery => brewery.state_province === selectedValue);
+        cards_div.innerText = '';
+        totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
+        console.log(filtered_breweries);
+        loadBreweries(filtered_breweries);
+        updatePagination(filtered_breweries);
+      } else if (e.target.matches('[data-filter-city]')) {
+        filtered_breweries = breweries_arr.filter(brewery => brewery.city === selectedValue);
+        cards_div.innerText = '';
+        totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
+        console.log(filtered_breweries);
+        loadBreweries(filtered_breweries);
+        updatePagination(filtered_breweries);
+      }
+    } else {
+      getBreweries()
+        .then(data => {
+          breweries_arr = [...data];
+          totalPages = Math.ceil(data.length / CARDS_PER_PAGE);
+          loadBreweries(breweries_arr);
+          updatePagination(breweries_arr);
+        })
+        .catch(err => {
+          console.log('Rejected:', err.message);
+        });
+    }
+
+  });
+
 });
-
-// document.addEventListener('click', (e) => {
-//   const isDropdownButton = e.target.matches('[data-dropdown-button]');
-//   let closestDropdown = e.target.closest('[data-dropdown]');
-//   if (!isDropdownButton && closestDropdown != null) return;
-
-//   let currentDropdown;
-//   if (isDropdownButton) {
-//     currentDropdown = e.target.closest('[data-dropdown]');
-//     currentDropdown.classList.toggle('active');
-//   }
-
-//   document.querySelectorAll("[data-dropdown].active").forEach(dropdown => {
-//     if (dropdown === currentDropdown) return;
-//     dropdown.classList.remove('active');
-//   });
-// });
 
 
 popupWrapper.addEventListener('click', (e) => {
@@ -114,7 +140,7 @@ const getBreweryDetails = async (breweryId) => {
 
 const buildBreweryCard = (brewery) => {
   const breweryCard =
-  `<div class="card" style="width: 18rem;">
+    `<div class="card" style="width: 18rem;">
     <span class="brewery-id" style="display: none;">${brewery.id}</span>
     <div class="card-body">
       <h5 class="card-title">${brewery.name}</h5>
@@ -138,7 +164,7 @@ const loadBreweries = (array) => {
 
 }
 
-function updatePagination (array) {
+function updatePagination(array) {
   pagination.innerHTML = '';
 
   for (let i = 1; i <= totalPages; i++) {
@@ -165,12 +191,21 @@ function updatePagination (array) {
 }
 
 getBreweries()
-.then(data => {
-  breweries_arr = [...data];
-  totalPages = Math.ceil(data.length / CARDS_PER_PAGE);
-  loadBreweries(breweries_arr);
-  updatePagination(breweries_arr);
-})
-.catch(err => {
-  console.log('Rejected:', err.message);
-});
+  .then(data => {
+    breweries_arr = [...data];
+    //states = breweries_arr.map(brewery => brewery.state_province.toLowerCase().replace(/ /g, '_'));
+    types = Array.from(new Set(breweries_arr.map(brewery => brewery.brewery_type))).sort();
+    states = Array.from(new Set(breweries_arr.map(brewery => brewery.state_province))).sort();
+    cities = Array.from(new Set(breweries_arr.map(brewery => brewery.city))).sort();
+    loadValues(filter_type, types);
+    loadValues(filter_state, states);
+    loadValues(filter_city, cities);
+    totalPages = Math.ceil(breweries_arr.length / CARDS_PER_PAGE);
+    loadBreweries(breweries_arr);
+    updatePagination(breweries_arr);
+  })
+  .catch(err => {
+    console.log('Rejected:', err.message);
+  });
+
+
