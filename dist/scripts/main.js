@@ -39,6 +39,27 @@ const loadValues = (select, values) => {
     select.insertAdjacentHTML('beforeend', option);
   };
 };
+// const button = document.querySelector('.clickity');
+
+// const event_handler = (event, arg) => {
+// 	console.log(event, arg);
+// }
+// button.addEventListener('click', (e) => {
+// 	event_handler(e, 'Job well done.');
+// });
+
+
+
+const optionChangeHandler = (array, property, value) => {
+  const filterMe = [...array];
+  // const properties = Object.keys(obj);
+  filtered_breweries = filterMe.filter(item => item[property] === value);
+  cards_div.innerText = '';
+  totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
+  console.log(filtered_breweries);
+  loadBreweries(filtered_breweries);
+  updatePagination(filtered_breweries);
+};
 
 const filter_dropdowns = document.querySelectorAll('.filter');
 filter_dropdowns.forEach(filter => {
@@ -48,29 +69,15 @@ filter_dropdowns.forEach(filter => {
     const selectedIndex = filter.selectedIndex;
     const selectedValue = filter[selectedIndex].value;
     console.log(e);
+    filtered_breweries = optionChangeHandler(breweries_arr)
     if (selectedValue !== '') {
       if (e.target.matches('[data-filter-type]')) {
-        filtered_breweries = breweries_arr.filter(brewery => brewery.brewery_type === selectedValue);
-        cards_div.innerText = '';
-        totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
-        console.log(filtered_breweries);
-        loadBreweries(filtered_breweries);
-        updatePagination(filtered_breweries);
+        optionChangeHandler(breweries_arr, 'brewery_type', selectedValue);
       } else if (e.target.matches('[data-filter-state]')) {
         filter_city.disabled = false;
-        filtered_breweries = breweries_arr.filter(brewery => brewery.state_province === selectedValue);
-        cards_div.innerText = '';
-        totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
-        console.log(filtered_breweries);
-        loadBreweries(filtered_breweries);
-        updatePagination(filtered_breweries);
+        optionChangeHandler(breweries_arr, 'state_province', selectedValue);
       } else if (e.target.matches('[data-filter-city]')) {
-        filtered_breweries = breweries_arr.filter(brewery => brewery.city === selectedValue);
-        cards_div.innerText = '';
-        totalPages = Math.ceil(filtered_breweries.length / CARDS_PER_PAGE);
-        console.log(filtered_breweries);
-        loadBreweries(filtered_breweries);
-        updatePagination(filtered_breweries);
+        optionChangeHandler(breweries_arr, 'city', selectedValue);
       }
     } else {
       getBreweries()
@@ -193,6 +200,7 @@ function updatePagination(array) {
 getBreweries()
   .then(data => {
     breweries_arr = [...data];
+    totalPages = Math.ceil(breweries_arr.length / CARDS_PER_PAGE);
     //states = breweries_arr.map(brewery => brewery.state_province.toLowerCase().replace(/ /g, '_'));
     types = Array.from(new Set(breweries_arr.map(brewery => brewery.brewery_type))).sort();
     states = Array.from(new Set(breweries_arr.map(brewery => brewery.state_province))).sort();
@@ -200,7 +208,6 @@ getBreweries()
     loadValues(filter_type, types);
     loadValues(filter_state, states);
     loadValues(filter_city, cities);
-    totalPages = Math.ceil(breweries_arr.length / CARDS_PER_PAGE);
     loadBreweries(breweries_arr);
     updatePagination(breweries_arr);
   })
