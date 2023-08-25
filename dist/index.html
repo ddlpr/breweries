@@ -11,115 +11,162 @@
 <body>
   <div class="container">
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary flex">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Beer.</a>
+        <a class="navbar-brand" href="#">Find a Beer for... <span class="username"></span></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
+          <li class="nav-item">
+            <button class="btn btn-outline-success show-add-brewery-form-btn me-2">Add a brewery</button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-danger logout">Logout</button>
+          </li>
         </div>
       </div>
     </nav>
 
+    <!-- MAIN PAGE CONTENT -->
+    <div class="content">
 
-    <div id="cards-area">
+      <!-- BREWERY CARDS AREA -->
+      <div id="cards-area">
 
-    </div>
+      </div>
+      <!-- /BREWERY CARDS AREA -->
 
-    <!-- <div class="header">
-      <div class="dropDown" data-dropdown>
-        <a class="link btn btn-primary" data-dropdown-button>Brewery Type <i class="bi bi-funnel"></i></a>
-        <div class="dropDown__menu">
-          <div class="dropDown__links">
-            <a class="link">Micro</a>
-            <a class="link">Nano</a>
-            <a class="link">Regional</a>
-            <a class="link">Brewpub</a>
-            <a class="link">Large</a>
-            <a class="link">Planning</a>
-            <a class="link">Bar</a>
-            <a class="link">Contract</a>
-            <a class="link">Proprietor</a>
-            <a class="link">Closed</a>
+      <!-- FILTERS -->
+      <div class="filters">
+        <select name="filter--type" id="filter--type" class="filter form-select form-select-sm mb-3" data-filter-type>
+          <option value="" selected>--Brewery Type--</option>
+        </select>
+        <select name="filter--state" id="filter--state" class="filter form-select form-select-sm mb-3" data-filter-state>
+          <option value="">--State--</option>
+        </select>
+        <select name="filter--city" id="filter--city" class="filter form-select form-select-sm mb-3" data-filter-city disabled>
+          <option value="">--City--</option>
+        </select>
+      </div>
+      <!-- /FILTERS -->
+
+      <nav>
+        <ul id="pagination" class="pagination justify-content-center mt-3"></ul>
+      </nav>
+      
+      <!-- BREWERY DETAILS POPUP -->
+      <div class="popup-wrapper">
+        <div class="card details-card popup" style="width: 28rem;">
+          <span class="close-details">X</span>
+          <!-- <img src="..." class="card-img-top" alt="..."> -->
+          <div class="card-body">
+            <h5 class="card-title details-name">Brewery Name</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item details-streetAddress"><i class="bi bi-building"></i> </li>
+            <li class="list-group-item details-city-state"><i class="bi bi-geo-alt-fill"></i> </li>
+            <li class="list-group-item details-phone"><i class="bi bi-telephone-fill"></i> </li>
+            <li class="list-group-item details-type"><i class="bi bi-bookmark-fill"></i> </li>
+          </ul>
+          <div class="card-body">
+            <a href="#" class="card-link details-url">Url</a>
           </div>
         </div>
-      </div> 
-    </div> -->
-
-    <div class="filters">
-      <select name="filter--type" id="filter--type" class="filter" data-filter-type>
-        <option value="" selected>--Brewery Type--</option>
-        <!-- <option value="micro" class="filter__option">Micro</option>
-        <option value="nano" class="filter__option">Nano</option>
-        <option value="regional" class="filter__option">Regional</option>
-        <option value="brewpub" class="filter__option">Brewpub</option>
-        <option value="large" class="filter__option">Large</option>
-        <option value="planning" class="filter__option">Planning</option>
-        <option value="bar" class="filter__option">Bar</option>
-        <option value="contract" class="filter__option">Contract</option>
-        <option value="proprietor" class="filter__option">Proprietor</option>
-        <option value="closed" class="filter__option">Closed</option> -->
-      </select>
-      <select name="filter--state" id="filter--state" class="filter" data-filter-state>
-        <option value="">--State--</option>
-      </select>
-      <select name="filter--city" id="filter--city" class="filter" data-filter-city disabled>
-        <option value="">--City--</option>
-      </select>
-    </div>
-
-    <nav>
-      <ul id="pagination" class="pagination justify-content-center mt-3"></ul>
-    </nav>
-
-    <div class="popup-wrapper">
-      <div class="card details-card popup" style="width: 28rem;">
-        <span class="close-details">X</span>
-        <!-- <img src="..." class="card-img-top" alt="..."> -->
-        <div class="card-body">
-          <h5 class="card-title details-name">Brewery Name</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item details-streetAddress"><i class="bi bi-building"></i> </li>
-          <li class="list-group-item details-city-state"><i class="bi bi-geo-alt-fill"></i> </li>
-          <li class="list-group-item details-phone"><i class="bi bi-telephone-fill"></i> </li>
-          <li class="list-group-item details-type"><i class="bi bi-bookmark-fill"></i> </li>
-        </ul>
-        <div class="card-body">
-          <a href="#" class="card-link details-url">Url</a>
-        </div>
       </div>
+      <!-- /BREWERY DETAILS POPUP -->
     </div>
+    <!-- /MAIN PAGE CONTENT -->
+
+    <!-- FORM: ADD BREWERY -->
+    <div class="container">
+      <form id="new-brewery-form" class=" form-add-brewery">
+        <div class="row">
+          <div class="col">
+            <label for="brewery-name-text" class="form-label">Brewery Name</label>
+          </div>
+          <div class="col">
+            <label for="brewery-type-text" class="form-label">Brewery Type</label>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <input id="brewery-name-text" type="text" class="form-control" placeholder="What's the brewery called?" aria-label="Brewery name">
+          </div>
+          <div class="col">
+            <!-- <input id="brewery-type-text" type="text" class="form-control" placeholder="What kind of brewery is it?" aria-label="Brewery type"> -->
+            <select name="filter--type" id="form-brewery-type">
+              <option value="">--Brewery Type--</option>
+              <option value="micro" class="filter__option">Micro</option>
+              <option value="nano" class="filter__option">Nano</option>
+              <option value="regional" class="filter__option">Regional</option>
+              <option value="brewpub" class="filter__option">Brewpub</option>
+              <option value="large" class="filter__option">Large</option>
+              <option value="planning" class="filter__option">Planning</option>
+              <option value="bar" class="filter__option">Bar</option>
+              <option value="contract" class="filter__option">Contract</option>
+              <option value="proprietor" class="filter__option">Proprietor</option>
+              <option value="closed" class="filter__option">Closed</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="brewery-city-text" class="form-label">City</label>
+          </div>
+          <div class="col">
+            <label for="brewery-state-text" class="form-label">State</label>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <input id="brewery-city-text" type="text" class="form-control" placeholder="Which city?" aria-label="City">
+          </div>
+          <div class="col">
+            <input id="brewery-state-text" type="text" class="form-control" placeholder="Which state?" aria-label="State">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="brewery-address-text" class="form-label">Address</label>
+          </div>
+          <div class="col">
+            <label for="brewery-phone-text" class="form-label">Phone</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <input id="brewery-address-text" type="text" class="form-control" placeholder="Street address?" aria-label="Address">
+          </div>
+          <div class="col">
+            <input id="brewery-phone-text" type="tel" class="form-control" placeholder="How about a phone number?" aria-label="Phone number">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="brewery-website-text" class="form-label">Website</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <input id="brewery-website-text" type="text" class="form-control" placeholder="Do you have a website?" aria-label="Website">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success my-2 submit-brewery-btn">Add</button>
+        <button type="button" class="btn btn-danger my-2 cancel-brewery-submit">Cancel</button>
+      </form>
+    </div>
+    <!-- /FORM: ADD BREWERY -->
+
+    <!-- WELCOME FORM -->
+    <div class="mb-3 first-visit-form">
+      <label for="username-text" class="form-label">Name</label>
+      <input type="text" class="form-control" id="username-text" placeholder="What should I call you?" data-submit-input>
+      <button type="button" class="btn btn-primary mt-2" data-submit-btn>Continue</button>
+    </div>
+    <!-- /WELCOME FORM -->
 
   </div>
-  <button class="clickity">Click Me!</button>
 
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script> -->
   <script src="scripts/main.js"></script>

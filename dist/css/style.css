@@ -9,6 +9,10 @@
   cursor: pointer;
 }
 
+.nav-item {
+  list-style: none;
+}
+
 .popup-wrapper {
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
@@ -41,36 +45,6 @@
   cursor: pointer;
 }
 
-.dropDown.active > .link,
-.link:hover {
-  color: rgb(255, 255, 255);
-}
-
-.dropDown {
-  position: relative;
-}
-.dropDown.active > .link + .dropDown__menu {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.dropDown__menu {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 0.25rem);
-  background-color: rgb(163, 186, 199);
-  padding: 0.75rem;
-  border-radius: 0.25rem;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-10px);
-  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
-}
-
-.dropDown__links {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.form-add-brewery {
+  max-width: 60%;
 }/*# sourceMappingURL=style.css.map */
