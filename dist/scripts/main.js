@@ -184,6 +184,7 @@ const buildBreweryCard = (brewery) => {
     `<div class="card" style="width: 18rem;">
     <span class="brewery-id" style="display: none;">${brewery.id}</span>
     <div class="card-body">
+      <img src="https://placehold.co/400x200" class="card-img-top" alt="...">
       <h5 class="card-title">${brewery.name}</h5>
       <p class="card-text"><i class="bi bi-geo-alt-fill"></i> ${brewery.city}, ${brewery.state_province}</p>
       <p class="card-text"><i class="bi bi-bookmark-fill"></i> ${brewery.brewery_type}</p>
