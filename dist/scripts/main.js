@@ -197,14 +197,20 @@ const buildBreweryCard = (brewery) => {
 const loadBreweries = (array, optionChange) => {
 
   cards_div.textContent = '';
-  let startIndex = (currentPage - 1) * CARDS_PER_PAGE;
+  const startIndex = (currentPage - 1) * CARDS_PER_PAGE;
   const endIndex = currentPage * CARDS_PER_PAGE;
+  let dif = endIndex - startIndex;
   if (optionChange) {
-    startIndex = 0;
-  }
-  for (let i = startIndex; i < endIndex && i < array.length; i++) {
-    let brewery = array[i];
-    buildBreweryCard(brewery);
+    // startIndex = 0;
+    for (let i = 0; i < dif && i < array.length; i++) {
+      let brewery = array[i];
+      buildBreweryCard(brewery);
+    }
+  } else {
+    for (let i = startIndex; i < endIndex && i < array.length; i++) {
+      let brewery = array[i];
+      buildBreweryCard(brewery);
+    }
   }
   // currentPage = 1;
   updatePagination(array, optionChange);
